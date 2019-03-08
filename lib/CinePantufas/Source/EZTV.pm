@@ -23,7 +23,7 @@ my %prio = (
 
 my $ua;
 
-my $base = 'https://eztv.ag';
+my $base = 'https://eztv.io';
 
 sub _ua {
   return $ua ||= HTTP::Tiny->new(
@@ -42,7 +42,7 @@ sub import {
 sub retrieve_show_list {
   my $class = shift;
 
-  my $resp = _ua->get($base."/js/search_shows1.js");
+  my $resp = _ua->get($base."/js/search_shows2.js");
 
   die "Failed: $resp->{status} $resp->{reason}\n"
     unless $resp->{success};
@@ -78,6 +78,7 @@ sub get_episode_list {
   my %episodes = ();
   for my $row (@rows) {
     my ($name) = $row =~ m{class="epinfo">([^>]+)</a>}smxi;
+    next unless $name;
     my ($ses,$epi) = $name =~ m{S?(\d+)[Ex](\d+)}i;
     my %links = reverse
         $row=~m{<a \s href="([^"]+)"\s+(?:rel="nofollow")?\s*class="(magnet|download_[\d+])"}smxgi;
