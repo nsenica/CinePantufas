@@ -73,11 +73,14 @@ sub get_episode_list {
     return;
   }
 
-  my @rows = $resp->{content} =~ m{<tr \s+ name="hover"[^>]+>(.*?)</tr>}smxg;
+  my @rows = $resp->{content} =~ m{<tr\s+name="hover"[^>]+>(.*?)</tr>}smxg;
 
   my %episodes = ();
   for my $row (@rows) {
-    my ($name) = $row =~ m{class="epinfo">([^>]+)</a>}smxi;
+
+    my ($name) = $row =~ m{class="epinfo">(.*?)</a>}smxi;
+    $name =~ s/<.+?>//ig;
+
     next unless $name;
     my ($ses,$epi) = $name =~ m{S?(\d+)[Ex](\d+)}i;
     my %links = reverse
